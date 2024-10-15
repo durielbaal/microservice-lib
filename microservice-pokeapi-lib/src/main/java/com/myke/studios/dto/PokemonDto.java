@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 /**
  * Dto pokedb.
  */
@@ -38,4 +40,8 @@ public class PokemonDto implements Serializable {
    * List of abilities.
    */
   public List<AbilitiesDto> abilities;
+  /**
+   * Types of pokemon.
+   */
+  public List<TypesDto> types;
 }
