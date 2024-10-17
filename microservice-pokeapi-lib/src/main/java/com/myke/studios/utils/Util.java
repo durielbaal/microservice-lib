@@ -5,4 +5,10 @@ package com.myke.studios.utils;
  */
 public class Util {
 
+  /**
+   * Private constructor.
+   */
+  private Util(){
+  }
+
 }
