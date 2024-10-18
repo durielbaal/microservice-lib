@@ -25,7 +25,8 @@
 		<module>microservice-parent</module>
 		<module>microservice-pokedb-lib</module>
 		<module>microservice-pokeapi-lib</module>
-	</modules>
+        <module>microservice-common</module>
+    </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
