@@ -11,6 +11,8 @@ import org.springframework.web.client.ResourceAccessException;
 
 
 
+
+
 /**
  * Abstract endpoint.
  */
@@ -48,7 +50,6 @@ public abstract class AbstractEndpoint {
    * @param <T> .
    * @param responseEntity .
    * @return response.
-
    */
   protected <T> T extractResponseData(final ResponseEntity<T> responseEntity) {
     final T body = responseEntity.getBody();
