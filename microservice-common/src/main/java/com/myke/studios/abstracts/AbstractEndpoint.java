@@ -46,12 +46,17 @@ public abstract class AbstractEndpoint {
   }
 
   /**
-   *  extract response.
-   * @param <T> .
+   * Get response.
    * @param responseEntity .
-   * @return response.
+   * @param responseClass .
+   * @param <T> .
+   * @return .
    */
-  protected <T> T extractResponseData(final ResponseEntity<T> responseEntity) {
+  protected <T> T extractResponseData(final ResponseEntity<T> responseEntity,
+      final Class<T> responseClass) {
+    if (Void.class.equals(responseClass)) {
+      return null;
+    }
     final T body = responseEntity.getBody();
     if (body == null) {
       throw new GenericException(GenericTypeException.UNEXPECTED_BODY_RESPONSE);

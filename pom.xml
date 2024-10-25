@@ -27,7 +27,8 @@
 		<module>microservice-pokeapi-lib</module>
     <module>microservice-common</module>
     <module>microservice-security-api</module>
-    </modules>
+    <module>microservice-kafka</module>
+  </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
