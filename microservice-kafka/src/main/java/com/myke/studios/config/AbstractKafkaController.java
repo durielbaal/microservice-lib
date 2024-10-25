@@ -1,20 +1,21 @@
 package com.myke.studios.config;
 
 /**
- * dsdf.
+ * Abstract kafka controller.
+ * @param <T> .
  */
-public abstract class AbstractKafkaController {
+public abstract class AbstractKafkaController<T> {
 
   /**
    * Producer.
    */
-  private final KafkaProducer kafkaProducer;
+  private final KafkaProducer<T> kafkaProducer;
 
   /**
    * Constructor.
    * @param kafkaProducer .
    */
-  protected AbstractKafkaController(KafkaProducer kafkaProducer) {
+  protected AbstractKafkaController(KafkaProducer<T> kafkaProducer) {
     this.kafkaProducer = kafkaProducer;
   }
 
@@ -22,7 +23,7 @@ public abstract class AbstractKafkaController {
    * Publish.
    * @param message .
    */
-  public void publish(final String message) {
+  public void publish(final T message) {
     kafkaProducer.sendMessage(message);
   }
 }

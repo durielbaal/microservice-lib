@@ -5,14 +5,15 @@ import org.springframework.stereotype.Service;
 
 /**
  * Kafka sender.
+ * @param <T> .
  */
 @Service
-public class KafkaProducer {
+public class KafkaProducer<T> {
 
   /**
    * Kafka template to send.
    */
-  private final KafkaTemplate<String, String> kafkaTemplate;
+  private final KafkaTemplate<String, T> kafkaTemplate;
   /**
    * Topic name to create the comunication.
    */
@@ -22,7 +23,7 @@ public class KafkaProducer {
    * Creating model of message (template).
    * @param kafkaTemplate dependency injection of template.
    */
-  public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {
+  public KafkaProducer(KafkaTemplate<String, T> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 
@@ -30,7 +31,7 @@ public class KafkaProducer {
    * Sending message.
    * @param message itself.
    */
-  public void sendMessage(String message) {
+  public void sendMessage(T message) {
     kafkaTemplate.send(topicName, message);
     System.out.println("Mensaje enviado por Pokeapi: " + message);
   }
