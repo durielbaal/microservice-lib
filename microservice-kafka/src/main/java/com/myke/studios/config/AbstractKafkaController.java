@@ -22,8 +22,9 @@ public abstract class AbstractKafkaController<T> {
   /**
    * Publish.
    * @param message .
+   * @param topicName .
    */
-  public void publish(final T message) {
-    kafkaProducer.sendMessage(message);
+  public void publish(final T message,final String topicName) {
+    kafkaProducer.sendMessage(message, topicName);
   }
 }

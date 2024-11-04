@@ -28,6 +28,7 @@
     <module>microservice-common</module>
     <module>microservice-security-api</module>
     <module>microservice-kafka</module>
+    <module>microservice-pokemonevent</module>
   </modules>
 	<scm>
 		<connection/>

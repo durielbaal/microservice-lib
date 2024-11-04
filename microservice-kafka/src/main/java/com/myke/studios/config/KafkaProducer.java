@@ -14,10 +14,6 @@ public class KafkaProducer<T> {
    * Kafka template to send.
    */
   private final KafkaTemplate<String, T> kafkaTemplate;
-  /**
-   * Topic name to create the comunication.
-   */
-  private final String topicName = "pokemon-topic";
 
   /**
    * Creating model of message (template).
@@ -30,9 +26,9 @@ public class KafkaProducer<T> {
   /**
    * Sending message.
    * @param message itself.
+   * @param topicName topic name.
    */
-  public void sendMessage(T message) {
+  public void sendMessage(T message, String topicName) {
     kafkaTemplate.send(topicName, message);
-    System.out.println("Mensaje enviado por Pokeapi: " + message);
   }
 }
