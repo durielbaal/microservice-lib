@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PokemonInsertEventBody extends AbstractPokemonEventBody {
   /**
-   * id.
+   * pokedex Number.
    */
-  public String id;
+  public String pokedexNumber;
   /**
    * name.
    */

@@ -1,5 +1,6 @@
 package com.myke.studios.infraestructure.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PokemonDto implements Serializable {
   /**
-   * id.
+   * pokedexNumber.
    */
-  public String id;
+  @JsonProperty("id")
+  public String pokedexNumber;
   /**
    * name.
    */
