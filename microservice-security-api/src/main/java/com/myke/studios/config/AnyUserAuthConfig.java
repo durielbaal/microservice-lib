@@ -29,8 +29,8 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
   }
 
   /**
-   * Abstract method to authenticate the user. This method should be implemented by subclasses to provide custom authentication logic.
-   *
+   * Abstract method to authenticate the user.
+   * This method should be implemented by subclasses to provide custom authentication logic.
    * @param username the username of the user.
    * @param password the password of the user.
    * @return the authentication token if authentication is successful.
@@ -40,22 +40,30 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
   protected Authentication authenticateUser(String username, String password)
       throws BadCredentialsException {
 
-    if (this.getUserDto() == null)
+    if (this.getUserDto() == null) {
       throw new BadCredentialsException("User not found");
-    if (!passwordEncoder.matches(password, this.getUserDto().getPassword()))
+    }
+
+    if (!passwordEncoder.matches(password, this.getUserDto().getPassword())) {
       throw new BadCredentialsException("Invalid username or password");
-    if (!hasRole())
+    }
+
+    if (!hasRole()) {
       throw new BadCredentialsException("User has no roles assigned");
+    }
+
     return new UsernamePasswordAuthenticationToken(username, password,
         this.getUserDto().getAuthorities());
   }
 
   /**
-   *  Do the user has the necessary role?
+   *  Do the user has the necessary role?.
    * @return true or false.
    */
   private boolean hasRole() {
-    if(this.getUserDto().getAuthorities().isEmpty()) return false;
+    if (this.getUserDto().getAuthorities().isEmpty()) {
+      return false;
+    }
     Set<SimpleGrantedAuthority> allAuthorities = new HashSet<>();
     allAuthorities.add(new SimpleGrantedAuthority("ROLE_admin"));
     allAuthorities.add(new SimpleGrantedAuthority("ROLE_user"));

@@ -37,6 +37,7 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
    */
   protected abstract Authentication authenticateUser(String username, String password)
       throws BadCredentialsException;
+
   /**
    * Authenticate user.
    * @param authentication .
