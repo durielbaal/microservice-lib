@@ -1,72 +1,77 @@
 package com.myke.studios.jwt.filter;
 
 import com.myke.studios.jwt.JwtService;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * JWT Filter.
+ * JWT authentication filter.
  */
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-
   /**
-   * JWT Service.
+   * Service used to validate JWT and extract user information.
    */
   private final JwtService jwtService;
 
   /**
-   * Injection of JWT Service.
-   * @param jwtService .
-   */
-  public JwtAuthenticationFilter(JwtService jwtService) {
-    this.jwtService = jwtService;
-  }
-
-
-  /**
-   * Filter.
-   * @param request .
-   * @param response .
-   * @param chain .
-   * @throws ServletException .
-   * @throws IOException .
+   * Filters incoming requests to extract and validate the JWT token.
+   * If valid, the user authentication is set in the security context.
+   *
+   * @param request the HTTP request.
+   * @param response the HTTP response.
+   * @param filterChain the filter chain for further processing.
+   * @throws ServletException if a servlet error occurs.
+   * @throws IOException if an I/O error occurs.
    */
   @Override
-  protected void doFilterInternal(HttpServletRequest request,
-      HttpServletResponse response, FilterChain chain)
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain filterChain)
       throws ServletException, IOException {
 
-    String authorizationHeader = request.getHeader("Authorization");
+    String token = getJwtFromRequest(request);
 
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      String token = authorizationHeader.substring(7);
-      try {
-        Claims claims = jwtService.validateToken(token);
-        if (claims != null) {
-          UsernamePasswordAuthenticationToken authentication =
-              new UsernamePasswordAuthenticationToken(null, null, Collections.emptyList());
-          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    if (token != null && jwtService.validateToken(token)) {
+      String username = jwtService.getUsernameFromToken(token);
+      List<String> roles = jwtService.getRolesFromToken(token);
+      List<SimpleGrantedAuthority> authorities = roles.stream()
+          .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+          .toList();
 
-          SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-      } catch (Exception e) {
-        log.info("Token error: {}", e.getMessage());
-      }
+      UsernamePasswordAuthenticationToken authentication =
+          new UsernamePasswordAuthenticationToken(username, null, authorities);
+      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    chain.doFilter(request, response);
+
+    filterChain.doFilter(request, response);
+  }
+
+  /**
+   * Extracts the JWT token from the Authorization header of the request.
+   *
+   * @param request the HTTP request.
+   * @return the JWT token, or null if not found.
+   */
+  private String getJwtFromRequest(HttpServletRequest request) {
+    String bearerToken = request.getHeader("Authorization");
+    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+      return bearerToken.substring(7);
+    }
+    return null;
   }
 }
