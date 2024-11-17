@@ -35,8 +35,14 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
    * @return the authentication token if authentication is successful.
    * @throws BadCredentialsException if the credentials are invalid.
    */
-  protected abstract Authentication authenticateUser(String username, String password)
+  protected abstract Authentication addAuthRequirements(String username, String password)
       throws BadCredentialsException;
+
+  /**
+   * What roles do User need to be authenticated?.
+   * @return boolean.
+   */
+  protected abstract boolean hasRole();
 
   /**
    * Authenticate user.
@@ -45,11 +51,19 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
    */
   @Override
   public Authentication authenticate(Authentication authentication) {
-    String username = authentication.getName();
-    String password = authentication.getCredentials().toString();
 
-    // Call the abstract method to perform custom authentication
-    return authenticateUser(username, password);
+    String password = authentication.getCredentials().toString();
+    if (this.getUserDto() == null) {
+      throw new BadCredentialsException("User not found");
+    }
+    if (!passwordEncoder.matches(password, this.getUserDto().getPassword())) {
+      throw new BadCredentialsException("Invalid username or password");
+    }
+    if (!hasRole()) {
+      throw new BadCredentialsException("User has no roles assigned");
+    }
+    String username = authentication.getName();
+    return addAuthRequirements(username, password);
   }
 
 }

@@ -18,14 +18,14 @@ import org.springframework.stereotype.Component;
 /**
  * AuthConfig to get any user rol.
  */
-@Component
-public class AnyUserAuthConfig extends AbstractAuthConfig {
+public class AdminUserAuthConfig extends AbstractAuthConfig {
 
   /**
    * constructor.
+   *
    * @param passwordEncoder .
    */
-  public AnyUserAuthConfig(PasswordEncoder passwordEncoder) {
+  public AdminUserAuthConfig(PasswordEncoder passwordEncoder) {
     super(passwordEncoder);
   }
 
@@ -40,6 +40,7 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
   @Override
   protected Authentication addAuthRequirements(String username, String password)
       throws BadCredentialsException {
+
     return new UsernamePasswordAuthenticationToken(username, password,
         this.getUserDto().getAuthorities());
   }
@@ -53,11 +54,8 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
     if (this.getUserDto().getAuthorities().isEmpty()) {
       return false;
     }
-    List<SimpleGrantedAuthority> allAuthorities = Arrays.stream(Role.values())
-        .map(role -> new SimpleGrantedAuthority(role.getRoleName())).toList();
-
     return this.getUserDto().getAuthorities().stream()
-        .anyMatch(allAuthorities::contains);
+        .anyMatch(authority -> authority.getAuthority().equals(Role.ADMIN.getRoleName()));
   }
 
 }
