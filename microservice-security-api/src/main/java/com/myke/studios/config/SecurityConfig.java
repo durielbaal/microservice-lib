@@ -1,5 +1,6 @@
 package com.myke.studios.config;
 
+import com.myke.studios.enums.Role;
 import com.myke.studios.jwt.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +36,14 @@ public class SecurityConfig {
    * @throws Exception if there is an error during configuration.
    */
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityStandardFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
                 .requestMatchers("/api/auth/register").permitAll()
-                .requestMatchers("/auth/login").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("api/auth/login").permitAll()
+                .anyRequest().hasAnyRole(Role.USER.getRoleName(),Role.ADMIN.getRoleName())
         )
         .addFilterBefore(jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class)

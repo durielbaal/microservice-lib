@@ -38,8 +38,16 @@ public class JwtSecurityTest {
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
         (userRequested.getUsername(),userRequested.getPassword()));
     String token = jwtService.generateToken(authentication);
-    System.out.println(token);
     assert token != null && !token.isEmpty();
     assert jwtService.validateToken(token);
+    assert userRequested.getUsername().equals(jwtService.getUsernameFromToken(token));
+
+    assert jwtService.getRolesFromToken(token)
+        .stream()
+        .map(role -> role.replace("ROLE_",""))
+        .toList().containsAll(userRequested.getRoles());
+    System.out.println("token: "+token);
+    System.out.println("user from token: "+jwtService.getUsernameFromToken(token));
+    System.out.println("user roles from token: "+jwtService.getRolesFromToken(token));
   }
 }

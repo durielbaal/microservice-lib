@@ -13,11 +13,11 @@ public enum Role {
   /**
    * Admin rol.
    */
-  ADMIN("ROLE_admin","user who take control and access of everything."),
+  ADMIN("admin","user who take control and access of everything."),
   /**
    * user rol.
    */
-  USER("ROLE_user","common user, with terms of use");
+  USER("user","common user, with terms of use");
   /**
    * rol name.
    */

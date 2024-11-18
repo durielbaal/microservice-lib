@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,13 +30,11 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
   /**
    * Abstract method to authenticate the user. This method should be implemented by subclasses
    * to provide custom authentication logic.
-   *
    * @param username the username of the user.
    * @param password the password of the user.
-   * @return the authentication token if authentication is successful.
    * @throws BadCredentialsException if the credentials are invalid.
    */
-  protected abstract Authentication addAuthRequirements(String username, String password)
+  protected abstract void addAuthRequirements(String username, String password)
       throws BadCredentialsException;
 
   /**
@@ -63,7 +62,10 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
       throw new BadCredentialsException("User has no roles assigned");
     }
     String username = authentication.getName();
-    return addAuthRequirements(username, password);
+    addAuthRequirements(username,password);
+    return new UsernamePasswordAuthenticationToken(username, password,
+        this.getUserDto().getAuthorities());
+
   }
 
 }

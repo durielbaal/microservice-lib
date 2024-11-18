@@ -30,18 +30,15 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
   }
 
   /**
-   * Abstract method to authenticate the user.
-   * This method should be implemented by subclasses to provide custom authentication logic.
+   * Add requirements to authenticate.
    * @param username the username of the user.
    * @param password the password of the user.
-   * @return the authentication token if authentication is successful.
    * @throws BadCredentialsException if the credentials are invalid.
    */
   @Override
-  protected Authentication addAuthRequirements(String username, String password)
+  protected void addAuthRequirements(String username, String password)
       throws BadCredentialsException {
-    return new UsernamePasswordAuthenticationToken(username, password,
-        this.getUserDto().getAuthorities());
+
   }
 
   /**
@@ -53,10 +50,10 @@ public class AnyUserAuthConfig extends AbstractAuthConfig {
     if (this.getUserDto().getAuthorities().isEmpty()) {
       return false;
     }
-    List<SimpleGrantedAuthority> allAuthorities = Arrays.stream(Role.values())
-        .map(role -> new SimpleGrantedAuthority(role.getRoleName())).toList();
+    List<String> allAuthorities = Arrays.stream(Role.values())
+        .map(role -> new SimpleGrantedAuthority(role.getRoleName()).getAuthority()).toList();
 
-    return this.getUserDto().getAuthorities().stream()
+    return this.getUserDto().getRoles().stream()
         .anyMatch(allAuthorities::contains);
   }
 

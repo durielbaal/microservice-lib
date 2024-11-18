@@ -34,15 +34,13 @@ public class AdminUserAuthConfig extends AbstractAuthConfig {
    * This method should be implemented by subclasses to provide custom authentication logic.
    * @param username the username of the user.
    * @param password the password of the user.
-   * @return the authentication token if authentication is successful.
    * @throws BadCredentialsException if the credentials are invalid.
    */
   @Override
-  protected Authentication addAuthRequirements(String username, String password)
+  protected void addAuthRequirements(String username, String password)
       throws BadCredentialsException {
 
-    return new UsernamePasswordAuthenticationToken(username, password,
-        this.getUserDto().getAuthorities());
+
   }
 
   /**

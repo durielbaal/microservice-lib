@@ -46,7 +46,7 @@ public class JwtService {
     String username = authentication.getName();
     List<String> roles = authentication.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
-        .collect(Collectors.toList());
+        .toList();
 
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("roles", roles);
@@ -88,7 +88,7 @@ public class JwtService {
         .parseClaimsJws(token)
         .getBody();
 
-    return (List<String>) claims.get("roles");  // Get the roles from the token
+    return (List<String>) claims.get("roles");
   }
 
   /**
@@ -118,7 +118,7 @@ public class JwtService {
   public List<SimpleGrantedAuthority> getAuthoritiesFromToken(String token) {
     List<String> roles = getRolesFromToken(token);
     return roles.stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))  // Prefix with "ROLE_"
-        .collect(Collectors.toList());
+        .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role))) // Prefix with ""
+        .toList();
   }
 }
