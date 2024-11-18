@@ -31,7 +31,7 @@ public class UserDto {
    */
   public List<SimpleGrantedAuthority> getAuthorities() {
     return roles.stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+        .map(SimpleGrantedAuthority::new)
         .toList();
   }
 }

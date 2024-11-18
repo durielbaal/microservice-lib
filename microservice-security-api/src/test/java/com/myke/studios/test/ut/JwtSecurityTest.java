@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Slf4j
 @SpringBootTest(classes = Initializer.class)
@@ -42,12 +43,10 @@ public class JwtSecurityTest {
     assert jwtService.validateToken(token);
     assert userRequested.getUsername().equals(jwtService.getUsernameFromToken(token));
 
-    assert jwtService.getRolesFromToken(token)
-        .stream()
-        .map(role -> role.replace("ROLE_",""))
-        .toList().containsAll(userRequested.getRoles());
-    System.out.println("token: "+token);
-    System.out.println("user from token: "+jwtService.getUsernameFromToken(token));
-    System.out.println("user roles from token: "+jwtService.getRolesFromToken(token));
+    assert jwtService.getRolesFromToken(token).stream().toList()
+        .containsAll(userRequested.getAuthorities().stream().map(SimpleGrantedAuthority::getAuthority).toList());
+    System.out.println("token: " + token);
+    System.out.println("user from token: " + jwtService.getUsernameFromToken(token));
+    System.out.println("user roles from token: " + jwtService.getRolesFromToken(token));
   }
 }

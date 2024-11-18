@@ -118,7 +118,7 @@ public class JwtService {
   public List<SimpleGrantedAuthority> getAuthoritiesFromToken(String token) {
     List<String> roles = getRolesFromToken(token);
     return roles.stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role))) // Prefix with ""
+        .map(SimpleGrantedAuthority::new)
         .toList();
   }
 }
