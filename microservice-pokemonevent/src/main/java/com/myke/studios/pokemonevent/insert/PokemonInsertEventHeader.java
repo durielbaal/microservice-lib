@@ -2,7 +2,9 @@ package com.myke.studios.pokemonevent.insert;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myke.studios.abstracts.AbstractPokemonEventHeader;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +30,7 @@ public class PokemonInsertEventHeader extends AbstractPokemonEventHeader {
   /**
    * Date of event creation.
    */
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  private LocalDateTime eventDate;
+  private String eventDate;
 
   /**
    * Constructor.
@@ -41,6 +42,6 @@ public class PokemonInsertEventHeader extends AbstractPokemonEventHeader {
     this.origin = origin;
     this.eventType = eventType;
     this.id = UUID.randomUUID().toString().replace("-","");
-    this.eventDate = LocalDateTime.now();
+    this.eventDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
   }
 }

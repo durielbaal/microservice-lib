@@ -1,5 +1,6 @@
 package com.myke.studios.abstracts;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "events")
-public  abstract class AbstractEvent<H, B> {
+public  abstract class AbstractEvent<H, B> implements Serializable {
   /**
    * info container to know what to do with body.
    */

@@ -5,6 +5,8 @@ import com.myke.studios.jwt.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -43,7 +46,7 @@ public class SecurityConfig {
             authorizeRequests
                 .requestMatchers("/api/auth/register").permitAll()
                 .requestMatchers("api/auth/login").permitAll()
-                .anyRequest().hasAnyRole(Role.USER.getRoleName(),Role.ADMIN.getRoleName())
+                .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class)

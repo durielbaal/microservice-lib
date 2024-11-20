@@ -12,7 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,13 +31,29 @@ public class JwtService {
    * Secret key used for signing and validating JWT tokens.
    * Injected from the application configuration.
    */
-  private final SecretKey jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
+  private SecretKey jwtSecret;
   /**
    * Expiration time for JWT tokens in milliseconds.
    * Injected from the application configuration.
    */
   @Value("${jwt.expiration_time}")
   private long jwtExpirationInMs;
+  /**
+   * Redis template.
+   */
+  private final RedisTemplate<String,String> redisTemplate;
+
+  /**
+   * Constructor.
+   * @param jwtSecret scret key.
+   * @param redisTemplate .
+   */
+  public JwtService(@Value("${jwt.secret}") String jwtSecret,
+      RedisTemplate<String,String> redisTemplate) {
+    this.jwtSecret = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    this.redisTemplate = redisTemplate;
+  }
 
   /**
    * Generates a JWT token for the given Authentication object.
@@ -100,11 +119,10 @@ public class JwtService {
     try {
       Jwts.parser()
           .setSigningKey(jwtSecret)
-          .parseClaimsJws(token);  // Parse the token to check validity
-      return true;
+          .parseClaimsJws(token);
+      return !inCache(token);
     } catch (SignatureException | MalformedJwtException | ExpiredJwtException
              | UnsupportedJwtException | IllegalArgumentException e) {
-      // Handle specific exceptions for token validation
       return false;
     }
   }
@@ -120,5 +138,17 @@ public class JwtService {
     return roles.stream()
         .map(SimpleGrantedAuthority::new)
         .toList();
+  }
+
+  /**
+   *  Is the token in cache?.
+   * @param token .
+   * @return .
+   */
+  private boolean inCache(String token) {
+    String username = this.getUsernameFromToken(token);
+    String cachedToken = redisTemplate.opsForValue().get(username);
+    return (cachedToken == null || !cachedToken.equals(token));
+
   }
 }

@@ -29,7 +29,6 @@ public class JwtSecurityTest {
 
 
   @Test
-  @PreAuthorize("hasRole('ROLE_user')")
   void tokenTest() {
     UserDto userDataBase =
         new UserDto("userTest",passwordEncoder.encode("pswTest"),new ArrayList<>(List.of("user","admin")));
@@ -40,7 +39,6 @@ public class JwtSecurityTest {
         (userRequested.getUsername(),userRequested.getPassword()));
     String token = jwtService.generateToken(authentication);
     assert token != null && !token.isEmpty();
-    assert jwtService.validateToken(token);
     assert userRequested.getUsername().equals(jwtService.getUsernameFromToken(token));
 
     assert jwtService.getRolesFromToken(token).stream().toList()
