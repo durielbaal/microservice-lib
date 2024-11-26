@@ -1,11 +1,13 @@
 package com.myke.studios.config;
 
-import com.myke.studios.enums.Role;
 import com.myke.studios.jwt.filter.JwtAuthenticationFilter;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -44,6 +46,8 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**",
+                    "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/register").permitAll()
                 .requestMatchers("api/auth/login").permitAll()
                 .anyRequest().authenticated()
@@ -65,6 +69,23 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Adding security header to our JWT security system.
+   * @return .
+   */
+  @Bean
+  public OpenAPI customOpenApi() {
+    return new OpenAPI()
+        .info(new Info().title("Pokeapi").version("1.0")
+            .description("API to pokeapi"))
+        .addSecurityItem(new SecurityRequirement().addList("JWT"))
+        .components(new io.swagger.v3.oas.models.Components()
+            .addSecuritySchemes("JWT", new SecurityScheme()
+                .name("Authorization")
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")));
+  }
 
 
 
