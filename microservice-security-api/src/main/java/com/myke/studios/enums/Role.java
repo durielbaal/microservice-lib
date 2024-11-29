@@ -1,7 +1,6 @@
 package com.myke.studios.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 /**

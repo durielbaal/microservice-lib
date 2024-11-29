@@ -4,12 +4,14 @@ import com.myke.studios.abstracts.AbstractPokemonEvent;
 import com.myke.studios.constant.ConstantEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Pokemon event.
  */
 @Data
 @NoArgsConstructor
+@Document(collection = "PokemonManagerEvents")
 public class PokemonInsertEvent extends AbstractPokemonEvent<PokemonInsertEventHeader, PokemonInsertEventBody> {
 
   /**

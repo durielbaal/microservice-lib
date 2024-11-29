@@ -24,7 +24,13 @@ public enum GenericTypeException {
    * Unexpected response.
    */
   UNEXPECTED_BODY_RESPONSE(ExceptionCode.C500000003.name(),HttpStatus.INTERNAL_SERVER_ERROR,
-          "Unexpected response");
+          "Unexpected response"),
+
+  /**
+   * Unexpected response.
+   */
+  UNEXPECTED_REGISTER_ERROR(ExceptionCode.C500000004.name(),HttpStatus.BAD_REQUEST,
+      "Unexpected register error");
   /**
    * Code of Exception.
    */

@@ -17,7 +17,7 @@ public enum ExceptionCode {
    */
   C500000003,
   /**
-   * Code UNEXPECTED RESPONSE.
+   * Code UNEXPECTED REGISTER ERROR.
    */
   C500000004,
 }

@@ -1,0 +1,19 @@
+docker run -d \ --name mongo-container \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=root \
+  -e MONGO_INITDB_ROOT_PASSWORD=example \
+  mongo
+
+#mongodb
+docker exec -it mongo-container mongosh -u michael -p 1234 --authenticationDatabase admin
+show dbs
+show collections
+
+#postgresql
+docker run -d --name postgres_container -p 5432:5432 -e POSTGRES_USER=michael -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=pokemondb -v postgres_data:/var/lib/postgresql/data postgres:latest
+
+docker exec -it postgres_container  psql -U michael -d pokemondb
+
+
+#redis
+docker exec -it redis sh
