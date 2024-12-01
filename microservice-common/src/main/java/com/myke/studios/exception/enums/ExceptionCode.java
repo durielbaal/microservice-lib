@@ -20,4 +20,8 @@ public enum ExceptionCode {
    * Code UNEXPECTED REGISTER ERROR.
    */
   C500000004,
+  /**
+   * Code UNEXPECTED LOGIN ERROR.
+   */
+  C500000005
 }

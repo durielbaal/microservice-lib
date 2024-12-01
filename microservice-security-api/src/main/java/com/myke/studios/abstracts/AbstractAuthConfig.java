@@ -55,7 +55,7 @@ public abstract class AbstractAuthConfig implements AuthenticationManager {
     if (this.getUserDto() == null) {
       throw new BadCredentialsException("User not found");
     }
-    if (!passwordEncoder.matches(password, this.getUserDto().getPassword())) {
+    if (password.equals(this.getUserDto().getPassword())) {
       throw new BadCredentialsException("Invalid username or password");
     }
     if (!hasRole()) {

@@ -31,4 +31,14 @@ public class KafkaProducer<T> {
   public void sendMessage(T message, String topicName) {
     kafkaTemplate.send(topicName, message);
   }
+
+  /**
+   * Send response of pokedb.
+   * @param response .
+   * @param topicName .
+   * @param reference id or reference as identifier/origin.
+   */
+  public  void sendResponse(T response, String topicName, String reference) {
+    kafkaTemplate.send(topicName, reference, response);
+  }
 }
