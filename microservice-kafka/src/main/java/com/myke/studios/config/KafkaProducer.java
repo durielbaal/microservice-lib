@@ -24,21 +24,12 @@ public class KafkaProducer<T> {
   }
 
   /**
-   * Sending message.
-   * @param message itself.
-   * @param topicName topic name.
-   */
-  public void sendMessage(T message, String topicName) {
-    kafkaTemplate.send(topicName, message);
-  }
-
-  /**
    * Send response of pokedb.
    * @param response .
    * @param topicName .
    * @param reference id or reference as identifier/origin.
    */
-  public  void sendResponse(T response, String topicName, String reference) {
+  public  void send(T response, String topicName, String reference) {
     kafkaTemplate.send(topicName, reference, response);
   }
 }
